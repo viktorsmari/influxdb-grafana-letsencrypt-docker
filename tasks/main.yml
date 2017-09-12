@@ -1,0 +1,9 @@
+---
+
+- name: Copy docker-compose.yml
+  template: src=docker-compose.yml dest=/root
+
+- name: Copy influx create db script
+  template: src=createInfluxDb.sh dest=/root
+  # This could run in ansible, but only if ansible starts the containers as well.
+  # Currently that is still manual 'doco up'

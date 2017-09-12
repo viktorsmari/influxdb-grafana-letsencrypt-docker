@@ -1,0 +1,41 @@
+https-portal:
+  image: steveltn/https-portal:1
+  ports:
+    - '80:80'
+    - '443:443'
+  links:
+    - influxdb
+    - grafana
+  restart: always
+  environment:
+    SERVER_NAMES_HASH_BUCKET_SIZE: 64
+    DOMAINS: {{https_portal_domains}}
+    STAGE: 'production'
+    # FORCE_RENEW: 'true'
+
+influxdb:
+  image: influxdb
+  restart: always
+  ports:
+    - 8083:8083
+    - 8086:8086
+  volumes:
+    - "/var/lib/influxdb:/var/lib/influxdb"
+  environment:
+    - "INFLUXDB_HTTP_AUTH_ENABLED=true"
+
+grafana:
+  image: grafana/grafana
+  restart: always
+  ports:
+    - 3000:3000
+  links:
+    - influxdb
+  environment:
+    - "GF_SERVER_ROOT_URL={{grafana_root_url}}"
+    - "GF_SECURITY_ADMIN_PASSWORD={{grafana_admin_password}}"
+    - "GF_AUTH_ANONYMOUS_ENABLED={{grafana_anonymous_enabled}}"
+    - "GF_ALLOW_SIGNUP=false"
+  volumes:
+    - "/var/lib/grafana:/var/lib/grafana"
+
