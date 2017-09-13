@@ -41,3 +41,11 @@ SSH into the target server and do `docker-compose up -d`
       curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create user {{influxdb_username}} with password {{influxdb_password}}"
       curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=grant all on {{influxdb_database}} to {{influxdb_username}}"
 
+
+## Post setup
+
+* When everything is working, you should enable HTTP_AUTH by changing influxdb service in docker-compose environment var to 'true':
+
+      environment:
+      - "INFLUXDB_HTTP_AUTH_ENABLED=true"
+
