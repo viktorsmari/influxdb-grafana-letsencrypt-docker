@@ -3,7 +3,25 @@
 - name: Copy docker-compose.yml
   template: src=docker-compose.yml dest=/root
 
-- name: Copy influx create db script
-  template: src=createInfluxDb.sh dest=/root
-  # This could run in ansible, but only if ansible starts the containers as well.
+  # TODO: ansible needs to start the containers as well.
   # Currently that is still manual 'doco up'
+
+- name: Create influxb databases
+  influxdb_database:
+    hostname: "localhost"
+    database_name: "{{ item }}"
+    state: present
+    username: admin
+    password: "{{influxdb_admin_password}}"
+  with_items: "{{influxdb_databases}}"
+
+# TODO:
+#- name: Create influx users with POST
+#   uri:
+#     url: "http://localhost:8086/query/?u=admin&p={{influxdb_admin_password}}"
+#     method: POST
+
+
+# TODO:
+#- name: Grant permission to users with POST
+#   uri:

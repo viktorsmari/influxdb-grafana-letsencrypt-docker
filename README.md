@@ -10,12 +10,24 @@ InfluxDB + Grafana + Nginx + Letsencrypt
 
 ### Variables
 
+Should create:
+
+* 1 admin user
+* 1 user
+* All the databases given
+
+TODO:
+
+* Create user + grant him permission on a database
+
 Modify and put the following in your playbook:
 
-    - hosts: example.com
+    - hosts: myserver
       vars:
         influxdb_admin_password: "influxadminpass"
-        influxdb_database: 'mydatabase'
+        influxdb_databases:
+          - 'mydatabase1'
+          - 'mydatabase2'
         influxdb_username: 'myuser'
         influxdb_password: 'mypassword'
         influx_url: "influxdb.example.com"
@@ -32,12 +44,13 @@ SSH into the target server and do `docker-compose up -d`
 
 ## TODO:
 
-* Find a way to automatically create all the databases + users in the Influxdb container.
+* Find a way to automatically (using uri module?) create users + grant (permission) in the Influxdb container.
 
 * Currently we must run the script under templates/createInfluxDb.sh which does the following:
 
       curl -G "https://{{influx_url}}/query" --data-urlencode "q=create user admin with password '{{influxdb_admin_password}}' WITH ALL PRIVILEGES"
-      curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create database {{influxdb_database}}"
+      # This one should be covered by ansible built in module
+      # curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create database {{influxdb_database}}"
       curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create user {{influxdb_username}} with password {{influxdb_password}}"
       curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=grant all on {{influxdb_database}} to {{influxdb_username}}"
 
