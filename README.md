@@ -26,11 +26,9 @@ Modify and put the following in your playbook:
     - hosts: myserver
       vars:
         influxdb_admin_password: "influxadminpass"
-        influxdb_databases:
-          - 'mydatabase1'
-          - 'mydatabase2'
-        influxdb_username: 'myuser'
-        influxdb_password: 'mypassword'
+        influxdb_users:
+          - { db: 'user1db', username: 'user1', password: 'pass1' }
+          - { db: 'user2db', username: 'user2', password: 'pass2' }
         influx_url: "influxdb.example.com"
         grafana_url: "grafana.example.com"
         grafana_admin_password: "adminpass"

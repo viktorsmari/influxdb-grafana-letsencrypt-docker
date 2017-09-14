@@ -9,19 +9,24 @@
 - name: Create influxb databases
   influxdb_database:
     hostname: "localhost"
-    database_name: "{{ item }}"
+    database_name: "{{ item.db }}"
     state: present
     username: admin
     password: "{{influxdb_admin_password}}"
-  with_items: "{{influxdb_databases}}"
+  with_items: "{{influxdb_users}}"
 
-# TODO:
-#- name: Create influx users with POST
-#   uri:
-#     url: "http://localhost:8086/query/?u=admin&p={{influxdb_admin_password}}"
-#     method: POST
+- name: Create influx users with POST
+  uri:
+    url: "http://localhost:8086/query?q={{'create user '|urlencode}}{{item.username}}{{' WITH PASSWORD '|urlencode}}'{{item.password}}'"
+    method: GET
+    user: admin
+    password: "{{influxdb_admin_password}}"
+  with_items: "{{influxdb_users}}"
 
-
-# TODO:
-#- name: Grant permission to users with POST
-#   uri:
+- name: Grant ALL on db with POST
+  uri:
+    url: "http://localhost:8086/query?q={{'GRANT ALL ON '|urlencode}}{{item.db}}{{' TO '|urlencode}}{{item.username}}"
+    method: GET
+    user: admin
+    password: "{{influxdb_admin_password}}"
+  with_items: "{{influxdb_users}}"
