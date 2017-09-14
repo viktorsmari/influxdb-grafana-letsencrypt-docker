@@ -15,6 +15,15 @@
     password: "{{influxdb_admin_password}}"
   with_items: "{{influxdb_users}}"
 
+  # TODO: UNTESTED
+- name: Create influx admin
+  uri:
+    url: "http://localhost:8086/query?q={{'CREATE USER admin WITH PASSWORD '|urlencode}}'{{influxdb_admin_password}}' {{' WITH ALL PRIVILEGES'|urlencode}}"
+    method: GET
+ #  user: admin
+ #  password: "{{influxdb_admin_password}}"
+
+
 - name: Create influx users with POST
   uri:
     url: "http://localhost:8086/query?q={{'create user '|urlencode}}{{item.username}}{{' WITH PASSWORD '|urlencode}}'{{item.password}}'"

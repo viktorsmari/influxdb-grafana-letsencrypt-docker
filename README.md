@@ -8,10 +8,12 @@ InfluxDB + Grafana + Nginx + Letsencrypt
 * lets-nginx on ports 80,443 in front, managing SSL certs via letsencrypt
 
 
-### Flow
-  1. Copy docker-compose.yml file
-  2. Start the containers (currently a manual step)
-  3. Create influxdb database, users, grants
+# Steps for ansible
+  1. Copies docker-compose.yml file
+  2. Starts the containers (currently a manual step)
+  3. Creates admin user
+  4. Enable HTTP_AUTH,  so we won't get hacked, - still a manual process (edit compose file + restart containers)
+  5. Creates influxdb databases, users, grants (with the admin account)
 
 ### Variables
 
@@ -20,6 +22,7 @@ Should create:
 * 1 admin user
 * 1 user
 * All the databases given
+* Grant those users 'ALL' (read+write) to their databases
 
 Modify and put the following in your playbook:
 
@@ -41,19 +44,6 @@ Modify and put the following in your playbook:
 SSH into the target server and do `docker-compose up -d`
 
 
-## TODO:
-
-* Find a way to automatically (using uri module?) create users + grant (permission) in the Influxdb container.
-
-* Currently we must run the following manually:
-
-      curl -G "https://{{influx_url}}/query" --data-urlencode "q=create user admin with password '{{influxdb_admin_password}}' WITH ALL PRIVILEGES"
-      # This one should be covered by ansible built in module
-      # curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create database {{influxdb_database}}"
-      curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=create user {{influxdb_username}} with password {{influxdb_password}}"
-      curl -G "https://{{influx_url}}/query?u=admin&p={{influxdb_admin_password}}" --data-urlencode "q=grant all on {{influxdb_database}} to {{influxdb_username}}"
-
-
 ## Post setup
 
 * When everything is working, you should enable HTTP_AUTH by changing influxdb service in docker-compose environment var to 'true':
@@ -61,3 +51,4 @@ SSH into the target server and do `docker-compose up -d`
       environment:
       - "INFLUXDB_HTTP_AUTH_ENABLED=true"
 
+* And restart containers: `docker-compose up -d`
