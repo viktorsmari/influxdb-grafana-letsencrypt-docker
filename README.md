@@ -8,6 +8,11 @@ InfluxDB + Grafana + Nginx + Letsencrypt
 * lets-nginx on ports 80,443 in front, managing SSL certs via letsencrypt
 
 
+### Flow
+  1. Copy docker-compose.yml file
+  2. Start the containers (currently a manual step)
+  3. Create influxdb database, users, grants
+
 ### Variables
 
 Should create:
@@ -46,7 +51,7 @@ SSH into the target server and do `docker-compose up -d`
 
 * Find a way to automatically (using uri module?) create users + grant (permission) in the Influxdb container.
 
-* Currently we must run the script under templates/createInfluxDb.sh which does the following:
+* Currently we must run the following manually:
 
       curl -G "https://{{influx_url}}/query" --data-urlencode "q=create user admin with password '{{influxdb_admin_password}}' WITH ALL PRIVILEGES"
       # This one should be covered by ansible built in module
