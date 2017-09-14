@@ -21,10 +21,6 @@ Should create:
 * 1 user
 * All the databases given
 
-TODO:
-
-* Create user + grant him permission on a database
-
 Modify and put the following in your playbook:
 
     - hosts: myserver
