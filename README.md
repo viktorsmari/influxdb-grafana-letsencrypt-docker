@@ -9,19 +9,13 @@ InfluxDB + Grafana + Nginx + Letsencrypt
 
 
 ### Ansible "should"
-  1. Copy docker-compose.yml file
-  2. Start the containers (currently a manual step)
-  3. Create admin user
-  4. Enable HTTP_AUTH,  so we won't get hacked, - still a manual process (edit compose file + restart containers)
-  5. Create influxdb databases, users, grants (with the admin account)
+* [X] 1. Copy docker-compose.yml file
+* [ ] 2. Start the containers (currently a manual step) - Should we use the `shell` module to perform `docker-compose up -d` ?
+* [x] 3. Create admin user for influxdb
+* [ ] 4. Enable HTTP_AUTH,  so we won't get hacked, - still a manual process (edit compose file + restart containers)
+* [x] 5. Create influxdb databases, users, grants (it does this using the admin account)
 
 ### Variables
-
-Should create:
-
-* 1 admin user
-* All the databases + users given
-* Grant those users 'ALL' (read+write) to their databases
 
 Modify and put the following in your playbook:
 
@@ -42,7 +36,7 @@ Modify and put the following in your playbook:
 
 This is UNTESTED on a fresh machine!
 
-1. Run the playbook ( fails because docker is not running )
+1. Run the playbook ( is only able to copy compose file, then fails because docker is not running )
 2. SSH into the target server and do `docker-compose up -d`
 3. Run the playbook again
 4. Change the HTTP_AUTH to 'true'
