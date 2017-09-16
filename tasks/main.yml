@@ -23,8 +23,8 @@
   uri:
     url: "http://localhost:8086/query?q={{'CREATE USER admin WITH PASSWORD '|urlencode}}'{{influxdb_admin_password}}'{{' WITH ALL PRIVILEGES'|urlencode}}"
     method: GET
- #  user: admin
- #  password: "{{influxdb_admin_password}}"
+    user: admin
+    password: "{{influxdb_admin_password}}"
 
 
 - name: Create influx users with POST
