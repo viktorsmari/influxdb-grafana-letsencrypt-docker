@@ -3,6 +3,9 @@
 - name: Copy docker-compose.yml
   template: src=docker-compose.yml dest=/root
 
+- name: Copy docker-compose.yml
+  template: src=default.ssl.conf.erb dest=/root
+
   # TODO: ansible needs to start the containers as well.
   # Currently that is still manual 'doco up'
 

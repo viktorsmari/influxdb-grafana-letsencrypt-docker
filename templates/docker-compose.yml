@@ -12,6 +12,8 @@ https-portal:
     DOMAINS: {{https_portal_domains}}
     STAGE: 'production'
     # FORCE_RENEW: 'true'
+  volumes:
+    - ./default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb:ro
 
 influxdb:
   image: influxdb
