@@ -9,6 +9,20 @@
   # TODO: ansible needs to start the containers as well.
   # Currently that is still manual 'doco up'
 
+- name: install easy_install
+  apt:
+    name: python-setuptools
+    state: present
+
+- name: install pip
+  easy_install:
+    name: pip
+    state: latest
+
+- name: pip install influxdb
+  pip:
+    name: influxdb
+
 - name: Create influxb databases
   influxdb_database:
     hostname: "localhost"
